@@ -1,3 +1,7 @@
+// Copyright 2014 Antoine Corcy. All rights reserved.
+// Use of this source code is governed by a MIT
+// license that can be found in the LICENSE file.
+
 package geocoder
 
 import (
@@ -12,6 +16,7 @@ const (
 	ENDPOINT = "http://maps.googleapis.com/maps/api/geocode/json?address=%v&sensor=false"
 )
 
+// Google defines the Google provider
 type Google struct {
 	locale string
 	region string
