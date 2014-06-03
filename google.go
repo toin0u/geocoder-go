@@ -22,16 +22,16 @@ type Google struct {
 	UseSsl bool
 }
 
-type Results struct {
-	Results []Result `json:"results"`
+type results struct {
+	Results []result `json:"results"`
 }
 
-type Result struct {
+type result struct {
 	FormattedAddress string   `json:"formatted_address"`
-	Geometry         Geometry `json:"geometry"`
+	Geometry         geometry `json:"geometry"`
 }
 
-type Geometry struct {
+type geometry struct {
 	Location Coordinate `json:"location"`
 }
 
@@ -43,12 +43,12 @@ func (google *Google) Geocode(a Address) (*Coordinate, error) {
 		return nil, err
 	}
 
-	var results Results
-	if err := json.NewDecoder(resp.Body).Decode(&results); err != nil {
+	var res results
+	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
 		return nil, err
 	}
 
-	location := results.Results[0].Geometry.Location
+	location := res.Results[0].Geometry.Location
 
 	return &Coordinate{location.Lat, location.Lng}, nil
 }
@@ -61,10 +61,10 @@ func (google *Google) Reverse(c Coordinate) (*Address, error) {
 		return nil, err
 	}
 
-	var results Results
-	if err := json.NewDecoder(resp.Body).Decode(&results); err != nil {
+	var res results
+	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
 		return nil, err
 	}
 
-	return &Address{results.Results[0].FormattedAddress}, nil
+	return &Address{res.Results[0].FormattedAddress}, nil
 }
