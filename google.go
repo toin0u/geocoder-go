@@ -12,14 +12,14 @@ import (
 )
 
 const (
-	ENDPOINT = "http://maps.googleapis.com/maps/api/geocode/json?address=%v&sensor=false"
+	GOOGLE_ENDPOINT = "%s://maps.googleapis.com/maps/api/geocode/json?address=%v&sensor=false"
 )
 
 // Google defines the Google provider
 type Google struct {
-	locale string
-	region string
 	UseSsl bool
+	Locale string
+	Region string
 }
 
 type results struct {
@@ -35,8 +35,30 @@ type geometry struct {
 	Location Coordinate `json:"location"`
 }
 
-func (google *Google) Geocode(a Address) (*Coordinate, error) {
-	url := fmt.Sprintf(ENDPOINT, url.QueryEscape(strings.TrimSpace(a.Street)))
+func (g *Google) buildEndpoint() string {
+	var endpoint, scheme string
+	if g.UseSsl {
+		scheme = "https"
+	} else {
+		scheme = "http"
+	}
+
+	endpoint = fmt.Sprintf(GOOGLE_ENDPOINT, scheme, "%v")
+
+	if g.Locale != "" {
+		endpoint = fmt.Sprintf("%s&language=%s", endpoint, g.Locale)
+	}
+
+	if g.Region != "" {
+		endpoint = fmt.Sprintf("%s&region=%s", endpoint, g.Region)
+	}
+
+	return endpoint
+}
+
+// Geocode with Google provider
+func (g *Google) Geocode(a Address) (*Coordinate, error) {
+	url := fmt.Sprintf(g.buildEndpoint(), url.QueryEscape(strings.TrimSpace(a.Street)))
 
 	resp, err := request(url)
 	if err != nil {
@@ -53,8 +75,9 @@ func (google *Google) Geocode(a Address) (*Coordinate, error) {
 	return &Coordinate{location.Lat, location.Lng}, nil
 }
 
-func (google *Google) Reverse(c Coordinate) (*Address, error) {
-	url := fmt.Sprintf(ENDPOINT, fmt.Sprintf("%f,%f", c.Lat, c.Lng))
+// Reverse geocode with Google provider
+func (g *Google) Reverse(c Coordinate) (*Address, error) {
+	url := fmt.Sprintf(g.buildEndpoint(), fmt.Sprintf("%f,%f", c.Lat, c.Lng))
 
 	resp, err := request(url)
 	if err != nil {

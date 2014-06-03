@@ -8,6 +8,29 @@ import (
 	"testing"
 )
 
+func TestEndpoint(t *testing.T) {
+	google := Google{true, "", ""}
+
+	endpoint := google.buildEndpoint()
+	if endpoint != "https://maps.googleapis.com/maps/api/geocode/json?address=%v&sensor=false" {
+		t.Errorf("Wrong endpoint: %v", endpoint)
+	}
+
+	google.Locale = "da-DK"
+	endpoint = google.buildEndpoint()
+	if endpoint != "https://maps.googleapis.com/maps/api/geocode/json?address=%v&sensor=false&language=da-DK" {
+		t.Errorf("Wrong endpoint: %v", endpoint)
+	}
+
+	google.UseSsl = false
+	google.Locale = ""
+	google.Region = "Denmark"
+	endpoint = google.buildEndpoint()
+	if endpoint != "http://maps.googleapis.com/maps/api/geocode/json?address=%v&sensor=false&region=Denmark" {
+		t.Errorf("Wrong endpoint: %v", endpoint)
+	}
+}
+
 func TestGeocode(t *testing.T) {
 	var google Google
 	address := Address{"Paris, France"}

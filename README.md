@@ -14,8 +14,8 @@ Install
 Providers
 ---------
 
-* Google
-* ...
+- *Google*: you can define `UseSsl`, `Locale` and `Region`. There are all optinal.
+- ...
 
 Geocode
 -------
@@ -35,7 +35,7 @@ Reverse
 ``` go
 import "github.com/toin0u/geocoder-go"
 
-var google geocoder.Google
+google := geocoder.Google{true, "fr-Fr", "France"}
 coodinate := geocoder.Coordinate{48.856614, 2.3522219}
 
 fmt.Println(google.Reverse(coodinate)) // &{94 Quai de l'Hôtel de ville, 75004 Paris, France} <nil>
