@@ -5,6 +5,10 @@
 // Package geocoder manages geocoding & reverse geocoding via extern providers
 package geocoder
 
+import (
+	"net/http"
+)
+
 // Address defines a street address to geocode
 type Address struct {
 	Street string
@@ -19,4 +23,13 @@ type Coordinate struct {
 type Provider interface {
 	Geocode(a Address) (*Coordinate, error)
 	Reverse(c Coordinate) (*Address, error)
+}
+
+func request(url string) (*http.Response, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

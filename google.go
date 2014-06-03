@@ -7,7 +7,6 @@ package geocoder
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
 	"net/url"
 	"strings"
 )
@@ -39,11 +38,10 @@ type Geometry struct {
 func (google *Google) Geocode(a Address) (*Coordinate, error) {
 	url := fmt.Sprintf(ENDPOINT, url.QueryEscape(strings.TrimSpace(a.Street)))
 
-	resp, err := http.Get(url)
+	resp, err := request(url)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
 
 	var results Results
 	if err := json.NewDecoder(resp.Body).Decode(&results); err != nil {
@@ -58,11 +56,10 @@ func (google *Google) Geocode(a Address) (*Coordinate, error) {
 func (google *Google) Reverse(c Coordinate) (*Address, error) {
 	url := fmt.Sprintf(ENDPOINT, fmt.Sprintf("%f,%f", c.Lat, c.Lng))
 
-	resp, err := http.Get(url)
+	resp, err := request(url)
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
 
 	var results Results
 	if err := json.NewDecoder(resp.Body).Decode(&results); err != nil {
