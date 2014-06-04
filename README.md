@@ -4,6 +4,7 @@ geocoder-go
 Geocoding library in Go.
 
 [![Build Status](https://api.travis-ci.org/toin0u/geocoder-go.svg)](http://travis-ci.org/toin0u/geocoder-go)
+[![GoDoc](https://godoc.org/github.com/toin0u/geocoder-go?status.png)](https://godoc.org/github.com/toin0u/geocoder-go)
 
 Install
 -------
