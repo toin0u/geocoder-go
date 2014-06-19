@@ -9,5 +9,11 @@ go:
     - release
     - tip
 
+matrix:
+    allow_failures:
+        - go: release
+        - go: tip
+    fast_finish: true
+
 script:
     - go test -v ./...
